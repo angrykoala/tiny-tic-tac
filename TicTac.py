@@ -5,7 +5,7 @@ import time
 import thumby
 import random
 
-print("TicTack")
+print("TicTac")
 print("by @angrykoala")
 
 single_player=False
@@ -13,7 +13,7 @@ single_player=False
 # 1 is x
 # 2 is o
 # 0 is game finished
-player_turn=1
+player_turn=1 
 
 # BITMAP: width: 9, height: 9
 x_bitmap = bytearray([1,130,68,40,16,40,68,130,1,
@@ -79,12 +79,13 @@ def user_input():
             if table[selected_square]==0:
                 table[selected_square]=1
                 player_turn=2
+                thumby.audio.play(3000, 80)
     
         if player_turn==2 and single_player==False:
-           if table[selected_square]==0:
+            if table[selected_square]==0:
                 table[selected_square]=2
                 player_turn=1
-
+                thumby.audio.play(3000, 80)
 
 def draw_player(bitmap, position):
     thumby.display.blit(bitmap, position[0]+2, position[1]+2, player_sprite_size, player_sprite_size, 0, 0, 0)
@@ -97,7 +98,8 @@ def draw_players():
             draw_player(x_bitmap, position)
         if value==2:
              draw_player(o_bitmap, position)
-            
+
+# AI is completely stupid, any decent ai would lead to impossible to win game
 def ai():
     options=[]
     for square, value in enumerate(table):
@@ -176,6 +178,7 @@ def main_menu():
     global menu_option
     global show_main_menu
     global single_player
+    global player_turn
     display_centered("TIC TAC", 2, False)
     display_centered("by @angrykoala", 12)
     
@@ -200,6 +203,10 @@ def main_menu():
             single_player=True
         elif menu_option==2:
             single_player=False
+        
+        random.seed(time.ticks_ms())
+        player_turn=random.randint(1,2)
+        print("Player "+str(player_turn)+" starts")
 
 
 def main():
@@ -227,7 +234,7 @@ def main():
             return False
     return True
 
-random.seed(time.ticks_ms())
+
 running=True
 while(running):
     thumby.display.fill(0) # Fill canvas to black
